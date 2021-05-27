@@ -1,0 +1,158 @@
+﻿@page "/sign-up";
+@inject NavigationManager NavManager;
+@using System.Text.RegularExpressions;
+
+<h3>SignUpPage</h3>
+<div class="center">
+    <div class="inner-div">
+        <table>
+            <tbody>
+                <tr>
+                    <td><label>First Name</label></td>
+                    <td><input type="text" name="firstName" @bind="firstName" />
+                        @if (firstNameError)
+                        {
+                            <p class="error">**Required</p>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td><label>Last Name</label></td>
+                    <td><input type="text" name="lastName" @bind="lastName" />
+                        @if (lastNameError)
+                        {
+                            <p class="error">**Required</p>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td><label>Email</label></td>
+                    <td><input type="email" name="email" @bind="email" />
+                        @if (emailError)
+                        {
+                            <p class="error">**Required</p>
+                        }
+                        @if (!emailError && isEmailValidError)
+                        {
+                            <p class="error">**Invalid Email</p>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td><label>Password</label></td>
+                    <td><input type="password" name="password" @bind="password" />
+                        @if (passwordError)
+                        {
+                            <p class="error">**Required</p>
+                        }
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="buttons-parent">
+            <div class="button-parent">
+                <button @onclick="handleSignIn">Sign In</button>
+            </div>
+            <div class="button-parent">
+                <button @onclick="handleUser">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <h1>Users @users.Count</h1>
+    <table>
+        <thead>
+            <th class="user-table-header">First Name</th>
+            <th class="user-table-header">Last Name</th>
+            <th class="user-table-header">Email</th>
+        </thead>
+        @foreach (var user in users)
+        {
+            <tr>
+                <td>@user.firstName</td>
+                <td>@user.lastName</td>
+                <td>@user.email</td>
+            </tr>
+        }
+    </table>
+</div>
+<SignInPage />
+
+
+@code {
+
+    private string firstName;
+    private bool firstNameError = false;
+    private string lastName;
+    private bool lastNameError = false;
+    private string email;
+    private bool emailError = false;
+    private bool isEmailValidError = false;
+    private string password;
+    private bool passwordError = false;
+    Regex re = new
+    Regex(@"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z",
+    RegexOptions.IgnoreCase);
+    private List<SignUpPage> users = new();
+
+    private void handleUser()
+    {
+        if (string.IsNullOrWhiteSpace(firstName))
+        {
+            firstNameError = true;
+        }
+        else
+        {
+            firstNameError = false;
+        }
+        if (string.IsNullOrWhiteSpace(lastName))
+        {
+            lastNameError = true;
+        }
+        else
+        {
+            lastNameError = false;
+        }
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            emailError = true;
+        }
+        else if (!string.IsNullOrWhiteSpace(email) && !re.IsMatch(email))
+        {
+            emailError = false;
+            isEmailValidError = true;
+        }
+        else
+        {
+            emailError = false;
+            isEmailValidError = false;
+        }
+
+
+        if (string.IsNullOrWhiteSpace(password))
+        {
+            passwordError = true;
+        }
+        else
+        {
+            passwordError = false;
+        }
+        if (!string.IsNullOrWhiteSpace(firstName) && !string.IsNullOrWhiteSpace(lastName) && (!string.IsNullOrWhiteSpace(email)
+        && !isEmailValidError)
+        && !string.IsNullOrWhiteSpace(password))
+        {
+            users.Add(new SignUpPage { firstName = firstName, lastName = lastName, email = email, password = password });
+            firstName = string.Empty;
+            lastName = string.Empty;
+            email = string.Empty;
+            password = string.Empty;
+        }
+    }
+
+    private void handleSignIn()
+    {
+        NavManager.NavigateTo("/sign-in");
+    }
+}

@@ -1,0 +1,48 @@
+﻿@page "/sign-in";
+@using System;
+@inject NavigationManager NavManager
+
+<h3>SignInPage</h3>
+
+<div class="center">
+    <div class="inner-div">
+        <table>
+            <tbody>
+                <tr>
+                    <td><label>Enter Registered Email</label></td>
+                    <td><input type="email" name="email" @bind="email" /></td>
+                    
+                </tr>
+                <tr>
+                    <td><label>Enter Password</label></td>
+                    <td><input type="password" name="password" @bind="password" /></td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="buttons-parent">
+            <div class="button-parent" @onclick="forgotPasswordPage">
+                <button style="background: linear-gradient(45deg, #2d1e96, #ff004794);">Forgot Password</button>
+            </div>
+            <div class="button-parent">
+                <button>Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+@* <div> @signUpObject.users</div> *@
+@code {
+    private string email;
+    private string password;
+    @* private object userBase; *@
+
+    public SignUpPage signUpObject = new SignUpPage();
+
+    @* Console.WriteLine("signUpObject", signUpObject) *@
+    @* signUpObject.users; *@
+
+
+
+    public void forgotPasswordPage() {
+        NavManager.NavigateTo("/forgot-password");
+    }
+}
